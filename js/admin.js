@@ -105,11 +105,18 @@
     if (siteNameEn) { siteNameEn.value = s.siteNameEn || ""; }
   }
 
+  const adminBgThemeLabel = document.getElementById("adminBgThemeLabel");
+
   function loadBgPreview() {
     if (!adminBgPreview) return;
     const s = getSettings();
-    if (s.bgImage) {
-      adminBgPreview.innerHTML = '<img src="' + escHtml(s.bgImage) + '" alt="bg">';
+    const mode = root.dataset.theme || "dark";
+    const img = s["bgImage" + (mode === "light" ? "Light" : "Dark")] || s.bgImage;
+    if (adminBgThemeLabel) {
+      adminBgThemeLabel.textContent = mode === "light" ? "Light Mode" : "Dark Mode";
+    }
+    if (img) {
+      adminBgPreview.innerHTML = '<img src="' + escHtml(img) + '" alt="bg">';
       adminBgPreview.classList.add("has-image");
     } else {
       adminBgPreview.innerHTML = '<span class="admin-bg-preview__placeholder" data-i18n="admin_bg_placeholder">لا توجد صورة</span>';
@@ -133,6 +140,8 @@
       siteNameEn: siteNameEn ? siteNameEn.value.trim() : (existing.siteNameEn || "Only"),
       animations: animationsToggle ? animationsToggle.checked : (existing.animations !== false),
     };
+    if (existing.bgImageDark) s.bgImageDark = existing.bgImageDark;
+    if (existing.bgImageLight) s.bgImageLight = existing.bgImageLight;
     if (existing.bgImage) s.bgImage = existing.bgImage;
     if (existing.bgOpacity !== undefined) s.bgOpacity = existing.bgOpacity;
     save("only-admin-settings", s);
@@ -467,6 +476,7 @@
     input.addEventListener("input", () => {
       root.dataset.theme = input.dataset.themeMode;
       root.style.setProperty(input.dataset.themeVar, input.value);
+      loadBgPreview();
     });
   });
 
@@ -501,7 +511,8 @@
       const reader = new FileReader();
       reader.onload = (ev) => {
         const s = getSettings();
-        s.bgImage = ev.target.result;
+        const mode = root.dataset.theme || "dark";
+        s["bgImage" + (mode === "light" ? "Light" : "Dark")] = ev.target.result;
         save("only-admin-settings", s);
         loadBgPreview();
         if (site.applyBgImage) site.applyBgImage();
@@ -514,7 +525,8 @@
   if (adminBgRemove) {
     adminBgRemove.addEventListener("click", () => {
       const s = getSettings();
-      delete s.bgImage;
+      const mode = root.dataset.theme || "dark";
+      delete s["bgImage" + (mode === "light" ? "Light" : "Dark")];
       save("only-admin-settings", s);
       loadBgPreview();
       if (site.applyBgImage) site.applyBgImage();

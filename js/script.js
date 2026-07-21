@@ -57,13 +57,17 @@
     if (!siteBg) return;
     let bgData;
     try { bgData = JSON.parse(localStorage.getItem("only-admin-settings")); } catch(e){}
-    if (bgData && bgData.bgImage) {
-      siteBg.style.backgroundImage = "url(" + bgData.bgImage + ")";
-      siteBg.style.opacity = (bgData.bgOpacity !== undefined ? bgData.bgOpacity / 100 : 0.3);
-      siteBg.classList.remove("hidden");
-    } else {
-      siteBg.classList.add("hidden");
+    if (bgData) {
+      const mode = root.dataset.theme || "dark";
+      const img = bgData["bgImage" + (mode === "light" ? "Light" : "Dark")] || bgData.bgImage;
+      if (img) {
+        siteBg.style.backgroundImage = "url(" + img + ")";
+        siteBg.style.opacity = (bgData.bgOpacity !== undefined ? bgData.bgOpacity / 100 : 0.3);
+        siteBg.classList.remove("hidden");
+        return;
+      }
     }
+    siteBg.classList.add("hidden");
   }
   function applyAnimations() {
     let s;
@@ -322,6 +326,7 @@
     root.dataset.theme = theme;
     localStorage.setItem("only-theme", theme);
     applyAdminTheme();
+    applyBgImage();
   }
 
   const savedTheme = localStorage.getItem("only-theme") || "dark";
