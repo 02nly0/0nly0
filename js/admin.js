@@ -307,7 +307,8 @@
             <div class="admin-tags-editor">
               <div class="admin-tags-editor__list" data-pid="${p.id}">${tagsHtml}</div>
               <div class="admin-tags-editor__add">
-                <input type="text" class="admin-input admin-tags-editor__input" data-pid="${p.id}" placeholder="Add tag + Enter">
+                <input type="text" class="admin-input admin-tags-editor__input" data-pid="${p.id}" placeholder="Add tag...">
+                <button class="admin-tags-editor__btn" type="button" data-add-tag="${p.id}" title="Add tag">+</button>
               </div>
             </div>
           </div>
@@ -382,18 +383,32 @@
       input.addEventListener("keydown", (e) => {
         if (e.key !== "Enter") return;
         e.preventDefault();
-        const val = input.value.trim();
-        if (!val) return;
-        const projects = getProjects();
-        const p = projects.find((x) => x.id === input.dataset.pid);
-        if (!p) return;
-        if (!p.tags) p.tags = [];
-        p.tags.push(val);
-        save("only-admin-projects", projects);
-        input.value = "";
-        renderProjects();
+        addTag(input.dataset.pid, input);
       });
     });
+
+    projectsList.querySelectorAll("[data-add-tag]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const input = projectsList.querySelector('.admin-tags-editor__input[data-pid="' + btn.dataset.addTag + '"]');
+        if (input) addTag(btn.dataset.addTag, input);
+      });
+    });
+  }
+
+  function addTag(pid, input) {
+    const val = input.value.trim();
+    if (!val) return;
+    const projects = getProjects();
+    const p = projects.find((x) => x.id === pid);
+    if (!p) return;
+    if (!p.tags) p.tags = [];
+    if (p.tags.indexOf(val) !== -1) { showToast("التاج موجود بالفعل"); return; }
+    p.tags.push(val);
+    save("only-admin-projects", projects);
+    input.value = "";
+    renderProjects();
+    const newInput = projectsList.querySelector('.admin-tags-editor__input[data-pid="' + pid + '"]');
+    if (newInput) newInput.focus();
   }
 
   const addProjectBtn = document.getElementById("addProjectBtn");

@@ -550,10 +550,32 @@
   background: rgba(239,68,68,.2);
   color: #ef4444;
 }
+.admin-tags-editor__add{
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
 .admin-tags-editor__input{
+  flex: 1;
   font-size: .82rem !important;
   padding: 6px 12px !important;
 }
+.admin-tags-editor__btn{
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  background: var(--accent-grad);
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: transform .2s var(--ease), opacity .2s var(--ease);
+}
+.admin-tags-editor__btn:hover{ transform: scale(1.08); }
+.admin-tags-editor__btn:active{ transform: scale(.92); }
 
 /* ================= ADMIN TOAST ================= */
 .admin-toast{
