@@ -109,7 +109,7 @@
     if (!adminBgPreview) return;
     const s = getSettings();
     if (s.bgImage) {
-      adminBgPreview.innerHTML = '<img src="' + s.bgImage + '" alt="bg">';
+      adminBgPreview.innerHTML = '<img src="' + escHtml(s.bgImage) + '" alt="bg">';
       adminBgPreview.classList.add("has-image");
     } else {
       adminBgPreview.innerHTML = '<span class="admin-bg-preview__placeholder" data-i18n="admin_bg_placeholder">لا توجد صورة</span>';
@@ -152,18 +152,21 @@
   const pinBtn = document.getElementById("pinBtn");
 
   function updateDots(len) {
+    if (!pinDots) return;
     pinDots.querySelectorAll("span").forEach((dot, i) => dot.classList.toggle("filled", i < len));
   }
 
-  pinInput.addEventListener("input", () => {
-    pinInput.value = pinInput.value.replace(/\D/g, "");
-    updateDots(pinInput.value.length);
-    pinError.classList.remove("show");
-  });
+  if (pinInput) {
+    pinInput.addEventListener("input", () => {
+      pinInput.value = pinInput.value.replace(/\D/g, "");
+      updateDots(pinInput.value.length);
+      if (pinError) pinError.classList.remove("show");
+    });
+  }
 
   function unlock() {
-    adminLock.classList.add("hidden");
-    adminPanel.classList.add("active");
+    if (adminLock) adminLock.classList.add("hidden");
+    if (adminPanel) adminPanel.classList.add("active");
     loadFormValues();
     loadSettings();
     loadBgPreview();
@@ -171,19 +174,24 @@
     renderProjects();
   }
 
-  pinBtn.addEventListener("click", () => {
-    if (pinInput.value === PIN) {
-      sessionStorage.setItem("only-admin-auth", "1");
-      unlock();
-    } else {
-      pinError.classList.add("show");
-      pinInput.value = "";
-      updateDots(0);
-      pinInput.focus();
-    }
-  });
+  if (pinBtn) {
+    pinBtn.addEventListener("click", () => {
+      if (!pinInput) return;
+      if (pinInput.value === PIN) {
+        sessionStorage.setItem("only-admin-auth", "1");
+        unlock();
+      } else {
+        if (pinError) pinError.classList.add("show");
+        pinInput.value = "";
+        updateDots(0);
+        pinInput.focus();
+      }
+    });
+  }
 
-  pinInput.addEventListener("keydown", (e) => { if (e.key === "Enter") pinBtn.click(); });
+  if (pinInput) {
+    pinInput.addEventListener("keydown", (e) => { if (e.key === "Enter" && pinBtn) pinBtn.click(); });
+  }
   if (sessionStorage.getItem("only-admin-auth")) unlock();
 
   /* ============ TOAST ============ */
@@ -246,8 +254,8 @@
       ).join("");
       return `
       <div class="admin-project-card glass" data-id="${p.id}">
-        <div class="admin-project-card__preview" style="background: linear-gradient(135deg, ${p.gradient.split(",")[0]}, ${p.gradient.split(",")[1]})">
-          ${p.image ? `<img src="${p.image}" alt="" loading="lazy">` : `<span class="project-card__glyph">${(p.titleEn || "?")[0]}</span>`}
+        <div class="admin-project-card__preview" style="background: linear-gradient(135deg, ${escHtml(p.gradient.split(",")[0])}, ${escHtml(p.gradient.split(",")[1])})">
+          ${p.image ? `<img src="${escHtml(p.image)}" alt="" loading="lazy">` : `<span class="project-card__glyph">${escHtml((p.titleEn || "?")[0])}</span>`}
           <button class="admin-project-card__img-btn" type="button" title="إضافة صورة">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
           </button>
@@ -378,27 +386,32 @@
     });
   }
 
-  document.getElementById("addProjectBtn").addEventListener("click", () => {
-    const projects = getProjects();
-    const idx = projects.length;
-    projects.push({
-      id: "p" + Date.now(),
-      titleAr: "مشروع جديد",
-      titleEn: "New Project",
-      descAr: "",
-      descEn: "",
-      tags: ["HTML", "CSS", "JS"],
-      gradient: gradients[idx % gradients.length],
-      image: "",
-      link: ""
+  const addProjectBtn = document.getElementById("addProjectBtn");
+  if (addProjectBtn) {
+    addProjectBtn.addEventListener("click", () => {
+      const projects = getProjects();
+      const idx = projects.length;
+      projects.push({
+        id: "p" + Date.now(),
+        titleAr: "مشروع جديد",
+        titleEn: "New Project",
+        descAr: "",
+        descEn: "",
+        tags: ["HTML", "CSS", "JS"],
+        gradient: gradients[idx % gradients.length],
+        image: "",
+        link: ""
+      });
+      save("only-admin-projects", projects);
+      renderProjects();
+      showToast("تمت الإضافة ✓");
     });
-    save("only-admin-projects", projects);
-    renderProjects();
-    showToast("تمت الإضافة ✓");
-  });
+  }
 
   /* ============ SAVE ALL ============ */
-  document.getElementById("adminSave").addEventListener("click", () => {
+  const adminSaveBtn = document.getElementById("adminSave");
+  if (adminSaveBtn) {
+    adminSaveBtn.addEventListener("click", () => {
     const t = getTranslations();
     const links = getLinks();
     const theme = getTheme();
@@ -427,22 +440,27 @@
     saveSettings();
     if (site.renderProjects) site.renderProjects();
     showToast("تم الحفظ بنجاح ✓");
-  });
+    });
+  }
 
   /* ============ PREVIEW ============ */
-  document.getElementById("adminPreview").addEventListener("click", () => {
-    window.location.hash = "#projects";
-  });
+  const adminPreviewBtn = document.getElementById("adminPreview");
+  if (adminPreviewBtn) {
+    adminPreviewBtn.addEventListener("click", () => {
+      window.location.hash = "#projects";
+    });
+  }
 
   /* ============ LOGOUT ============ */
-  document.getElementById("adminLogout").addEventListener("click", () => {
-    sessionStorage.removeItem("only-admin-auth");
-    adminPanel.classList.remove("active");
-    adminLock.classList.remove("hidden");
-    pinInput.value = "";
-    updateDots(0);
-    pinInput.focus();
-  });
+  const adminLogoutBtn = document.getElementById("adminLogout");
+  if (adminLogoutBtn) {
+    adminLogoutBtn.addEventListener("click", () => {
+      sessionStorage.removeItem("only-admin-auth");
+      if (adminPanel) adminPanel.classList.remove("active");
+      if (adminLock) adminLock.classList.remove("hidden");
+      if (pinInput) { pinInput.value = ""; updateDots(0); pinInput.focus(); }
+    });
+  }
 
   /* ============ THEME PREVIEW ============ */
   document.querySelectorAll(".admin-color").forEach((input) => {

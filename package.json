@@ -1,0 +1,13 @@
+{
+  "name": "only-portfolio",
+  "version": "1.0.0",
+  "description": "Only — Personal Portfolio Website",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": ["portfolio", "personal-site", "front-end"],
+  "author": "Only",
+  "license": "UNLICENSED",
+  "private": true
+}

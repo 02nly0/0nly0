@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 
 const PORT = 3000;
-const ROOT = path.join(__dirname, '..');
+const ROOT = __dirname;
 
 const mime = {
   '.html': 'text/html',
@@ -24,6 +24,8 @@ const mime = {
   '.mp4': 'video/mp4',
 };
 
+const staticExts = new Set(['.css', '.js', '.png', '.jpg', '.jpeg', '.gif', '.webp', '.svg', '.ico', '.woff2', '.woff', '.ttf', '.otf', '.mp4']);
+
 /* Pages that should serve index.html (SPA) */
 const spaPages = ['/', '/home', '/about', '/projects', '/contact', '/admin'];
 
@@ -39,7 +41,12 @@ http.createServer((req, res) => {
         res.end('Internal Server Error');
         return;
       }
-      res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8', 'X-Content-Type-Options': 'nosniff' });
+      res.writeHead(200, {
+        'Content-Type': 'text/html; charset=utf-8',
+        'X-Content-Type-Options': 'nosniff',
+        'X-Frame-Options': 'DENY',
+        'Referrer-Policy': 'strict-origin-when-cross-origin',
+      });
       res.end(data);
     });
     return;
@@ -64,8 +71,17 @@ http.createServer((req, res) => {
       });
       return;
     }
-    const ext = path.extname(fp);
-    res.writeHead(200, { 'Content-Type': (mime[ext] || 'application/octet-stream') + '; charset=utf-8', 'X-Content-Type-Options': 'nosniff' });
+    const ext = path.extname(fp).toLowerCase();
+    const ct = mime[ext] || 'application/octet-stream';
+    const needsCharset = ct.startsWith('text/') || ct === 'application/javascript' || ct === 'application/json' || ct === 'image/svg+xml';
+    const headers = {
+      'Content-Type': ct + (needsCharset ? '; charset=utf-8' : ''),
+      'X-Content-Type-Options': 'nosniff',
+    };
+    if (staticExts.has(ext)) {
+      headers['Cache-Control'] = 'public, max-age=31536000, immutable';
+    }
+    res.writeHead(200, headers);
     res.end(data);
   });
 }).listen(PORT, () => {

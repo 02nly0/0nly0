@@ -373,8 +373,12 @@
       document.querySelectorAll("[data-admin-link]").forEach((el) => {
         const key = el.dataset.adminLink;
         if (lk[key]) {
-          if (el.tagName === "A") el.href = lk[key];
-          else el.textContent = lk[key];
+          if (el.tagName === "A") {
+            const val = lk[key];
+            el.href = (key === "email" && !/^https?:\/\//i.test(val)) ? "mailto:" + val : val;
+          } else {
+            el.textContent = lk[key];
+          }
         }
       });
     }
@@ -393,6 +397,11 @@
   function escHtml(s) {
     return String(s).replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
   }
+  function escUrl(s) {
+    const str = String(s).trim();
+    if (/^javascript:/i.test(str)) return "#";
+    return str.replace(/["'()]/g, "");
+  }
 
   function renderProjects() {
     const grid = document.getElementById("projectsGrid");
@@ -407,13 +416,13 @@
       const title = lang === "ar" ? escHtml(p.titleAr) : escHtml(p.titleEn);
       const glyph = escHtml((p.titleEn || "?")[0]);
       const artStyle = p.image
-        ? "background-image:url(" + p.image + ");background-size:cover;background-position:center;"
+        ? "background-image:url(" + escUrl(p.image) + ");background-size:cover;background-position:center;"
         : "background:linear-gradient(135deg," + escHtml(colors[0]) + "," + escHtml(colors[1]) + ");";
       const tags = p.tags || (p.tag ? p.tag.split(/[·,]\s*/) : []);
       const tagsHtml = tags.map(function(t){ return '<span class="project-card__tag">' + escHtml(t.trim()) + '</span>'; }).join("");
       return '<article class="project-card glass" data-project-idx="' + i + '">' +
         '<div class="project-card__art" style="' + artStyle + '">' +
-          (p.image ? '<img src="' + p.image + '" alt="' + title + '" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;">' : '<span class="project-card__glyph">' + glyph + '</span>') +
+          (p.image ? '<img src="' + escUrl(p.image) + '" alt="' + title + '" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;">' : '<span class="project-card__glyph">' + glyph + '</span>') +
         '</div>' +
         '<div class="project-card__info">' +
           '<div class="project-card__tags">' + tagsHtml + '</div>' +
@@ -446,13 +455,13 @@
     const tags = p.tags || [];
     const tagsHtml = tags.map(function(t){ return '<span class="project-modal__tag">' + escHtml(t.trim()) + '</span>'; }).join("");
     const artStyle = p.image
-      ? "background-image:url(" + p.image + ");background-size:cover;background-position:center;"
+      ? "background-image:url(" + escUrl(p.image) + ");background-size:cover;background-position:center;"
       : "background:linear-gradient(135deg," + escHtml(colors[0]) + "," + escHtml(colors[1]) + ");";
 
     const modal = document.getElementById("projectModal");
     modal.querySelector(".project-modal__art").style.cssText = artStyle;
     modal.querySelector(".project-modal__art").innerHTML = p.image
-      ? '<img src="' + p.image + '" alt="' + title + '" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;border-radius:var(--radius-lg);">'
+      ? '<img src="' + escUrl(p.image) + '" alt="' + title + '" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;border-radius:var(--radius-lg);">'
       : '<span class="project-card__glyph" style="font-size:4rem;">' + escHtml((p.titleEn || "?")[0]) + '</span>';
     modal.querySelector(".project-modal__title").textContent = title;
     modal.querySelector(".project-modal__tags").innerHTML = tagsHtml;
