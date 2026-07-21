@@ -92,9 +92,12 @@
   const siteNameEn = document.getElementById("siteNameEn");
   const animationsToggle = document.getElementById("animationsToggle");
   const animationsLabel = document.getElementById("animationsLabel");
-  const adminBgFile = document.getElementById("adminBgFile");
-  const adminBgPreview = document.getElementById("adminBgPreview");
-  const adminBgRemove = document.getElementById("adminBgRemove");
+  const adminBgFileDark = document.getElementById("adminBgFileDark");
+  const adminBgPreviewDark = document.getElementById("adminBgPreviewDark");
+  const adminBgRemoveDark = document.getElementById("adminBgRemoveDark");
+  const adminBgFileLight = document.getElementById("adminBgFileLight");
+  const adminBgPreviewLight = document.getElementById("adminBgPreviewLight");
+  const adminBgRemoveLight = document.getElementById("adminBgRemoveLight");
   const adminBgOpacity = document.getElementById("adminBgOpacity");
 
   function loadSettings() {
@@ -105,23 +108,21 @@
     if (siteNameEn) { siteNameEn.value = s.siteNameEn || ""; }
   }
 
-  const adminBgThemeLabel = document.getElementById("adminBgThemeLabel");
+  function setPreview(el, img) {
+    if (!el) return;
+    if (img) {
+      el.innerHTML = '<img src="' + escHtml(img) + '" alt="bg">';
+      el.classList.add("has-image");
+    } else {
+      el.innerHTML = '<span class="admin-bg-preview__placeholder" data-i18n="admin_bg_placeholder">لا توجد صورة</span>';
+      el.classList.remove("has-image");
+    }
+  }
 
   function loadBgPreview() {
-    if (!adminBgPreview) return;
     const s = getSettings();
-    const mode = root.dataset.theme || "dark";
-    const img = s["bgImage" + (mode === "light" ? "Light" : "Dark")] || s.bgImage;
-    if (adminBgThemeLabel) {
-      adminBgThemeLabel.textContent = mode === "light" ? "Light Mode" : "Dark Mode";
-    }
-    if (img) {
-      adminBgPreview.innerHTML = '<img src="' + escHtml(img) + '" alt="bg">';
-      adminBgPreview.classList.add("has-image");
-    } else {
-      adminBgPreview.innerHTML = '<span class="admin-bg-preview__placeholder" data-i18n="admin_bg_placeholder">لا توجد صورة</span>';
-      adminBgPreview.classList.remove("has-image");
-    }
+    setPreview(adminBgPreviewDark, s.bgImageDark);
+    setPreview(adminBgPreviewLight, s.bgImageLight);
     if (adminBgOpacity) { adminBgOpacity.value = s.bgOpacity !== undefined ? s.bgOpacity : 30; }
   }
 
@@ -476,7 +477,6 @@
     input.addEventListener("input", () => {
       root.dataset.theme = input.dataset.themeMode;
       root.style.setProperty(input.dataset.themeVar, input.value);
-      loadBgPreview();
     });
   });
 
@@ -503,36 +503,38 @@
     });
   }
 
-  if (adminBgFile) {
-    adminBgFile.addEventListener("change", (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
-      if (file.size > 2 * 1024 * 1024) { showToast("الصورة كبيرة جدًا (الحد الأقصى 2MB)"); return; }
-      const reader = new FileReader();
-      reader.onload = (ev) => {
+  function bindBgUpload(fileInput, removeBtn, key) {
+    if (fileInput) {
+      fileInput.addEventListener("change", (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        if (file.size > 2 * 1024 * 1024) { showToast("الصورة كبيرة جدًا (الحد الأقصى 2MB)"); return; }
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          const s = getSettings();
+          s[key] = ev.target.result;
+          save("only-admin-settings", s);
+          loadBgPreview();
+          if (site.applyBgImage) site.applyBgImage();
+          showToast("تمت إضافة الخلفية ✓");
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+    if (removeBtn) {
+      removeBtn.addEventListener("click", () => {
         const s = getSettings();
-        const mode = root.dataset.theme || "dark";
-        s["bgImage" + (mode === "light" ? "Light" : "Dark")] = ev.target.result;
+        delete s[key];
         save("only-admin-settings", s);
         loadBgPreview();
         if (site.applyBgImage) site.applyBgImage();
-        showToast("تمت إضافة الخلفية ✓");
-      };
-      reader.readAsDataURL(file);
-    });
+        showToast("تمت إزالة الخلفية ✓");
+      });
+    }
   }
 
-  if (adminBgRemove) {
-    adminBgRemove.addEventListener("click", () => {
-      const s = getSettings();
-      const mode = root.dataset.theme || "dark";
-      delete s["bgImage" + (mode === "light" ? "Light" : "Dark")];
-      save("only-admin-settings", s);
-      loadBgPreview();
-      if (site.applyBgImage) site.applyBgImage();
-      showToast("تمت إزالة الخلفية ✓");
-    });
-  }
+  bindBgUpload(adminBgFileDark, adminBgRemoveDark, "bgImageDark");
+  bindBgUpload(adminBgFileLight, adminBgRemoveLight, "bgImageLight");
 
   if (adminBgOpacity) {
     adminBgOpacity.addEventListener("input", () => {

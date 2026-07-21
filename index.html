@@ -357,24 +357,43 @@
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                   <div>
                     <h3 class="admin-settings__card-title" data-i18n="admin_bg_image">خلفية الموقع</h3>
-                    <p class="admin-settings__card-desc" data-i18n="admin_bg_image_desc">إضافة صورة خلفية للموقع.</p>
+                    <p class="admin-settings__card-desc" data-i18n="admin_bg_image_desc">إضافة صورة خلفية لكل وضع.</p>
                   </div>
                 </div>
-                <div class="admin-bg-upload" id="adminBgUpload">
-                  <p class="admin-field__label" id="adminBgThemeLabel" style="margin-bottom:8px"></p>
-                  <div class="admin-bg-preview" id="adminBgPreview">
+
+                <!-- Dark Mode BG -->
+                <div class="admin-bg-upload" id="adminBgUploadDark">
+                  <p class="admin-field__label" style="margin-bottom:8px">Dark Mode</p>
+                  <div class="admin-bg-preview" id="adminBgPreviewDark">
                     <span class="admin-bg-preview__placeholder" data-i18n="admin_bg_placeholder">لا توجد صورة</span>
                   </div>
                   <div class="admin-bg-actions">
                     <label class="btn btn-ghost admin-bg-actions__pick" type="button">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
                       <span data-i18n="admin_bg_pick">اختيار صورة</span>
-                      <input type="file" accept="image/*" id="adminBgFile" class="admin-bg-file">
+                      <input type="file" accept="image/*" id="adminBgFileDark" class="admin-bg-file">
                     </label>
-                    <button class="btn btn-ghost admin-bg-actions__remove" id="adminBgRemove" type="button" data-i18n="admin_bg_remove">إزالة</button>
+                    <button class="btn btn-ghost admin-bg-actions__remove" id="adminBgRemoveDark" type="button" data-i18n="admin_bg_remove">إزالة</button>
                   </div>
-                  <label class="admin-field" style="margin-top:12px"><span class="admin-field__label">Opacity</span><input type="range" min="0" max="100" value="30" id="adminBgOpacity" class="admin-bg-opacity"></label>
                 </div>
+
+                <!-- Light Mode BG -->
+                <div class="admin-bg-upload" id="adminBgUploadLight" style="margin-top:16px">
+                  <p class="admin-field__label" style="margin-bottom:8px">Light Mode</p>
+                  <div class="admin-bg-preview" id="adminBgPreviewLight">
+                    <span class="admin-bg-preview__placeholder" data-i18n="admin_bg_placeholder">لا توجد صورة</span>
+                  </div>
+                  <div class="admin-bg-actions">
+                    <label class="btn btn-ghost admin-bg-actions__pick" type="button">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                      <span data-i18n="admin_bg_pick">اختيار صورة</span>
+                      <input type="file" accept="image/*" id="adminBgFileLight" class="admin-bg-file">
+                    </label>
+                    <button class="btn btn-ghost admin-bg-actions__remove" id="adminBgRemoveLight" type="button" data-i18n="admin_bg_remove">إزالة</button>
+                  </div>
+                </div>
+
+                <label class="admin-field" style="margin-top:12px"><span class="admin-field__label">Opacity</span><input type="range" min="0" max="100" value="30" id="adminBgOpacity" class="admin-bg-opacity"></label>
               </div>
 
               <div class="admin-settings__card glass">
