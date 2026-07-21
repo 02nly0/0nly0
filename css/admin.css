@@ -591,23 +591,67 @@
 }
 
 /* ================= RESPONSIVE ================= */
+
+/* Tablet */
+@media (max-width: 900px){
+  .admin-content{ padding: 24px 20px 60px; }
+  .admin-settings__card{ padding: 20px; }
+  .admin-project-card__row{ flex-wrap: wrap; }
+}
+
+/* Mobile */
 @media (max-width: 720px){
+  .admin-topbar{ padding: 10px 16px; gap: 10px; }
+  .admin-topbar__badge{ display: none; }
+  .admin-topbar__actions{ gap: 6px; }
+  .admin-topbar__actions .btn{ font-size: .78rem; padding: 8px 14px; }
+
   .admin-body{ flex-direction: column; }
   .admin-tabs{
     flex-direction: row;
     overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
     min-width: 0;
     border-left: none;
     border-bottom: 1px solid var(--glass-border);
     padding: 10px 0;
     gap: 0;
+    scrollbar-width: none;
   }
-  .admin-tab{ padding: 8px 16px; white-space: nowrap; }
-  .admin-content{ padding: 20px 16px 60px; }
-  .admin-fields{ grid-template-columns: 1fr; }
-  .admin-topbar__actions .btn{ display: none; }
-  .admin-project-card{ flex-direction: column; }
+  .admin-tabs::-webkit-scrollbar{ display: none; }
+  .admin-tab{ padding: 8px 14px; white-space: nowrap; font-size: .82rem; }
+
+  .admin-content{ padding: 16px 14px 60px; }
+  .admin-section__title{ font-size: 1.1rem; margin-bottom: 20px; }
+
+  .admin-fields{ grid-template-columns: 1fr; gap: 14px; }
+
+  .admin-settings__card{ padding: 16px; border-radius: var(--radius-sm); }
+  .admin-settings__card-header{ gap: 10px; }
+  .admin-settings__card-header > svg{ width: 22px; height: 22px; }
+  .admin-settings__card-title{ font-size: .95rem; }
+
+  .admin-project-card{ flex-direction: column; border-radius: var(--radius-sm); }
   .admin-project-card__preview{ width: 100%; min-height: 140px; }
+  .admin-project-card__body{ padding: 14px 16px; }
   .admin-project-card__row{ flex-direction: column; }
   .admin-projects-header{ flex-direction: column; gap: 12px; align-items: flex-start; }
+
+  .admin-theme-group{ padding: 14px; }
+  .admin-theme-group__fields{ grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px; }
+  .admin-field--color{ gap: 8px; }
+  .admin-color{ width: 38px; height: 38px; }
+
+  .admin-bg-actions{ flex-wrap: wrap; }
+  .admin-toast{ font-size: .8rem; padding: 10px 18px; max-width: 90%; }
+}
+
+/* Small phones */
+@media (max-width: 380px){
+  .admin-topbar{ padding: 8px 12px; gap: 8px; }
+  .admin-lock__card{ padding: 32px 20px; }
+  .admin-pin__input{ height: 56px; font-size: 1.6rem; }
+  .admin-content{ padding: 12px 10px 60px; }
+  .admin-settings__card{ padding: 12px; }
+  .admin-project-card__body{ padding: 12px; }
 }
