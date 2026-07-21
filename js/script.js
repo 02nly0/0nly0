@@ -276,7 +276,12 @@
     a.addEventListener("click", (e) => {
       e.preventDefault();
       const id = a.getAttribute("href").replace("#", "");
-      window.location.hash = "#" + id;
+      if (id === "home") {
+        history.pushState("", "", window.location.pathname + window.location.search);
+        showPage("home");
+      } else {
+        window.location.hash = "#" + id;
+      }
       const nl = document.getElementById("navLinks");
       const nb = document.getElementById("navBurger");
       if (nl) nl.classList.remove("open");
