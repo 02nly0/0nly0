@@ -354,16 +354,13 @@
 
               <div class="admin-settings__card glass">
                 <div class="admin-settings__card-header">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
                   <div>
-                    <h3 class="admin-settings__card-title" data-i18n="admin_bg_image">خلفية الموقع</h3>
-                    <p class="admin-settings__card-desc" data-i18n="admin_bg_image_desc">إضافة صورة خلفية لكل وضع.</p>
+                    <h3 class="admin-settings__card-title">Dark Mode Background</h3>
+                    <p class="admin-settings__card-desc">إضافة صورة خلفية لوضع الدارك.</p>
                   </div>
                 </div>
-
-                <!-- Dark Mode BG -->
                 <div class="admin-bg-upload" id="adminBgUploadDark">
-                  <p class="admin-field__label" style="margin-bottom:8px">Dark Mode</p>
                   <div class="admin-bg-preview" id="adminBgPreviewDark">
                     <span class="admin-bg-preview__placeholder" data-i18n="admin_bg_placeholder">لا توجد صورة</span>
                   </div>
@@ -376,10 +373,18 @@
                     <button class="btn btn-ghost admin-bg-actions__remove" id="adminBgRemoveDark" type="button" data-i18n="admin_bg_remove">إزالة</button>
                   </div>
                 </div>
+                <label class="admin-field" style="margin-top:12px"><span class="admin-field__label">Opacity</span><input type="range" min="0" max="100" value="30" id="adminBgOpacity" class="admin-bg-opacity"></label>
+              </div>
 
-                <!-- Light Mode BG -->
-                <div class="admin-bg-upload" id="adminBgUploadLight" style="margin-top:16px">
-                  <p class="admin-field__label" style="margin-bottom:8px">Light Mode</p>
+              <div class="admin-settings__card glass">
+                <div class="admin-settings__card-header">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3v1m0 16v1m8.66-13.5l-.87.5M4.21 16.5l-.87.5M20.66 16.5l-.87-.5M4.21 7.5l-.87-.5M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                  <div>
+                    <h3 class="admin-settings__card-title">Light Mode Background</h3>
+                    <p class="admin-settings__card-desc">إضافة صورة خلفية لوضع اللايت.</p>
+                  </div>
+                </div>
+                <div class="admin-bg-upload" id="adminBgUploadLight">
                   <div class="admin-bg-preview" id="adminBgPreviewLight">
                     <span class="admin-bg-preview__placeholder" data-i18n="admin_bg_placeholder">لا توجد صورة</span>
                   </div>
@@ -392,8 +397,6 @@
                     <button class="btn btn-ghost admin-bg-actions__remove" id="adminBgRemoveLight" type="button" data-i18n="admin_bg_remove">إزالة</button>
                   </div>
                 </div>
-
-                <label class="admin-field" style="margin-top:12px"><span class="admin-field__label">Opacity</span><input type="range" min="0" max="100" value="30" id="adminBgOpacity" class="admin-bg-opacity"></label>
               </div>
 
               <div class="admin-settings__card glass">

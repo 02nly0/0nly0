@@ -472,7 +472,7 @@
   const adminPreviewBtn = document.getElementById("adminPreview");
   if (adminPreviewBtn) {
     adminPreviewBtn.addEventListener("click", () => {
-      window.location.hash = "#projects";
+      window.location.hash = "#home";
     });
   }
 
