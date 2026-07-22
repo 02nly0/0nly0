@@ -189,12 +189,12 @@
 
       <div class="admin-body">
         <nav class="admin-tabs" id="adminTabs">
-          <button class="admin-tab active" data-tab="home" data-i18n="admin_tab_home">الرئيسية</button>
-          <button class="admin-tab" data-tab="about" data-i18n="admin_tab_about">نبذة عني</button>
-          <button class="admin-tab" data-tab="projects" data-i18n="admin_tab_projects">المشاريع</button>
-          <button class="admin-tab" data-tab="contact" data-i18n="admin_tab_contact">التواصل</button>
-          <button class="admin-tab" data-tab="footer" data-i18n="admin_tab_footer">الفوتر</button>
-          <button class="admin-tab" data-tab="settings" data-i18n="admin_tab_settings">الإعدادات</button>
+          <button class="admin-tab active" data-tab="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l9-9 9 9M5 10v10a1 1 0 001 1h3a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1h3a1 1 0 001-1V10"/></svg><span data-i18n="admin_tab_home">الرئيسية</span></button>
+          <button class="admin-tab" data-tab="about"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 10-16 0"/></svg><span data-i18n="admin_tab_about">نبذة عني</span></button>
+          <button class="admin-tab" data-tab="projects"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span data-i18n="admin_tab_projects">المشاريع</span></button>
+          <button class="admin-tab" data-tab="contact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.18 2 2 0 014.11 2h3a2 2 0 012 1.72c.13.81.36 1.6.68 2.34a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.74.32 1.53.55 2.34.68a2 2 0 011.72 2.01z"/></svg><span data-i18n="admin_tab_contact">التواصل</span></button>
+          <button class="admin-tab" data-tab="footer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M2 17h20M8 21h8"/></svg><span data-i18n="admin_tab_footer">الفوتر</span></button>
+          <button class="admin-tab" data-tab="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg><span data-i18n="admin_tab_settings">الإعدادات</span></button>
         </nav>
 
         <div class="admin-content">
@@ -273,6 +273,14 @@
               <label class="admin-field"><span class="admin-field__label">GitHub URL</span><input type="url" data-link="github" class="admin-input"></label>
               <label class="admin-field"><span class="admin-field__label">Instagram URL</span><input type="url" data-link="instagram" class="admin-input"></label>
               <label class="admin-field"><span class="admin-field__label">Email</span><input type="email" data-link="email" class="admin-input"></label>
+            </div>
+
+            <div class="admin-contact-methods" style="margin-top:28px">
+              <div class="admin-projects-header">
+                <h3 style="font-family:var(--font-display);font-weight:700;font-size:1.1rem;margin:0">طرق التواصل الإضافية</h3>
+                <button class="btn btn-primary" id="addContactMethodBtn" type="button">+ إضافة طريقة</button>
+              </div>
+              <div class="admin-contact-methods__list" id="adminContactMethodsList"></div>
             </div>
           </section>
 
