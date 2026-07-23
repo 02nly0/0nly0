@@ -22,3 +22,6 @@ npm-debug.log*
 # Build
 dist/
 build/
+
+# User data
+data.json

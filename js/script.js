@@ -1,5 +1,20 @@
-(() => {
+(async () => {
   "use strict";
+
+  /* ============ SYNC FROM SERVER ============ */
+  function syncFromServer() {
+    return fetch("/api/data")
+      .then(function(r) { return r.json(); })
+      .then(function(serverData) {
+        if (serverData && typeof serverData === "object") {
+          Object.keys(serverData).forEach(function(key) {
+            localStorage.setItem(key, JSON.stringify(serverData[key]));
+          });
+        }
+      })
+      .catch(function() {});
+  }
+  await syncFromServer();
 
   /* ============ ANTI-INSPECTION ============ */
   document.addEventListener("contextmenu", e => e.preventDefault());
@@ -447,7 +462,7 @@
   ];
 
   function escHtml(s) {
-    return String(s).replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+    return String(s).replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/'/g,"&#39;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
   }
   function escUrl(s) {
     const str = String(s).trim();

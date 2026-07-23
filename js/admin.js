@@ -75,7 +75,28 @@
     const s = localStorage.getItem(key);
     return s ? JSON.parse(s) : JSON.parse(JSON.stringify(fallback));
   }
-  function save(key, data) { localStorage.setItem(key, JSON.stringify(data)); }
+  function save(key, data) { localStorage.setItem(key, JSON.stringify(data)); syncToServer(key, data); }
+
+  function syncToServer(key, data) {
+    fetch("/api/data", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ pin: PIN, data: { [key]: data } })
+    }).catch(function() {});
+  }
+
+  function syncFromServer() {
+    return fetch("/api/data")
+      .then(function(r) { return r.json(); })
+      .then(function(serverData) {
+        if (serverData && typeof serverData === "object") {
+          Object.keys(serverData).forEach(function(key) {
+            localStorage.setItem(key, JSON.stringify(serverData[key]));
+          });
+        }
+      })
+      .catch(function() {});
+  }
 
   function getTranslations() { return load("only-admin-translations", defaultTranslations); }
   function getProjects() { return load("only-admin-projects", defaultProjects); }
@@ -177,11 +198,13 @@
   function unlock() {
     if (adminLock) adminLock.classList.add("hidden");
     if (adminPanel) adminPanel.classList.add("active");
-    loadFormValues();
-    loadSettings();
-    loadBgPreview();
-    loadAnimationsToggle();
-    renderProjects();
+    syncFromServer().then(function() {
+      loadFormValues();
+      loadSettings();
+      loadBgPreview();
+      loadAnimationsToggle();
+      renderProjects();
+    });
   }
 
   if (pinBtn) {
@@ -251,7 +274,7 @@
   /* ============ PROJECTS CRUD ============ */
 
   function escHtml(s) {
-    return String(s).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    return String(s).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/'/g, "&#39;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
   }
 
   function renderProjects() {
@@ -457,7 +480,6 @@
     const list = document.getElementById("adminContactMethodsList");
     if (!list) return;
     const methods = getContactMethods();
-    const iconOpts = Object.keys(contactIcons).map(function(k) { return '<option value="' + k + '">' + k.charAt(0).toUpperCase() + k.slice(1) + '</option>'; }).join("");
     list.innerHTML = methods.map(function(m) {
       return '<div class="admin-contact-method-card glass" data-cm-id="' + m.id + '">' +
         '<div class="admin-contact-method-card__preview">' + (contactIcons[m.icon] || contactIcons.link) + '</div>' +

@@ -2,8 +2,30 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 const ROOT = __dirname;
+const DATA_FILE = path.join(ROOT, 'data.json');
+const ADMIN_PIN = '123456';
+
+function readData() {
+  try { return JSON.parse(fs.readFileSync(DATA_FILE, 'utf8')); }
+  catch (e) { return {}; }
+}
+
+function writeData(data) {
+  fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2), 'utf8');
+}
+
+function parseBody(req) {
+  return new Promise(function (resolve, reject) {
+    var body = '';
+    req.on('data', function (chunk) { body += chunk; });
+    req.on('end', function () {
+      try { resolve(JSON.parse(body)); }
+      catch (e) { reject(e); }
+    });
+  });
+}
 
 const mime = {
   '.html': 'text/html',
@@ -29,23 +51,72 @@ const staticExts = new Set(['.css', '.js', '.png', '.jpg', '.jpeg', '.gif', '.we
 /* Pages that should serve index.html (SPA) */
 const spaPages = ['/', '/home', '/about', '/projects', '/contact', '/admin'];
 
-http.createServer((req, res) => {
+const securityHeaders = {
+  'X-Content-Type-Options': 'nosniff',
+  'X-Frame-Options': 'DENY',
+  'Referrer-Policy': 'strict-origin-when-cross-origin',
+  'X-XSS-Protection': '1; mode=block',
+};
+
+function serveErrorPage(res, code, filePath) {
+  fs.readFile(path.join(ROOT, filePath), (e, d) => {
+    if (!res.headersSent) {
+      res.writeHead(code, { 'Content-Type': 'text/html; charset=utf-8', ...securityHeaders });
+    }
+    res.end(d || (code + ' Error'));
+  });
+}
+
+http.createServer(async (req, res) => {
   let url = req.url.split('?')[0];
+
+  /* ============ DATA API ============ */
+  if (url === '/api/data') {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    if (req.method === 'OPTIONS') { res.writeHead(204); res.end(); return; }
+
+    if (req.method === 'GET') {
+      const data = readData();
+      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', ...securityHeaders });
+      res.end(JSON.stringify(data));
+      return;
+    }
+    if (req.method === 'POST') {
+      try {
+        const payload = await parseBody(req);
+        if (payload.pin !== ADMIN_PIN) {
+          res.writeHead(401, { 'Content-Type': 'application/json', ...securityHeaders });
+          res.end(JSON.stringify({ error: 'Unauthorized' }));
+          return;
+        }
+        const existing = readData();
+        if (payload.data && typeof payload.data === 'object') {
+          Object.keys(payload.data).forEach(function (k) { existing[k] = payload.data[k]; });
+        }
+        writeData(existing);
+        res.writeHead(200, { 'Content-Type': 'application/json', ...securityHeaders });
+        res.end(JSON.stringify({ ok: true }));
+      } catch (e) {
+        res.writeHead(400, { 'Content-Type': 'application/json', ...securityHeaders });
+        res.end(JSON.stringify({ error: 'Invalid request' }));
+      }
+      return;
+    }
+  }
 
   /* SPA: serve index.html for page routes */
   if (spaPages.includes(url)) {
     const fp = path.join(ROOT, 'index.html');
     fs.readFile(fp, (err, data) => {
       if (err) {
-        res.writeHead(500, { 'Content-Type': 'text/plain' });
-        res.end('Internal Server Error');
+        serveErrorPage(res, 500, '500.html');
         return;
       }
       res.writeHead(200, {
         'Content-Type': 'text/html; charset=utf-8',
-        'X-Content-Type-Options': 'nosniff',
-        'X-Frame-Options': 'DENY',
-        'Referrer-Policy': 'strict-origin-when-cross-origin',
+        ...securityHeaders,
       });
       res.end(data);
     });
@@ -57,18 +128,12 @@ http.createServer((req, res) => {
   const resolved = path.resolve(fp);
   const rootResolved = path.resolve(ROOT);
   if (!resolved.startsWith(rootResolved)) {
-    res.writeHead(403, { 'Content-Type': 'text/html; charset=utf-8' });
-    fs.readFile(path.join(ROOT, '403.html'), (e3, d3) => {
-      res.end(d3 || '403 Forbidden');
-    });
+    serveErrorPage(res, 403, '403.html');
     return;
   }
   fs.readFile(fp, (err, data) => {
     if (err) {
-      fs.readFile(path.join(ROOT, '404.html'), (e2, d2) => {
-        res.writeHead(404, { 'Content-Type': 'text/html; charset=utf-8' });
-        res.end(d2);
-      });
+      serveErrorPage(res, 404, '404.html');
       return;
     }
     const ext = path.extname(fp).toLowerCase();
@@ -76,7 +141,7 @@ http.createServer((req, res) => {
     const needsCharset = ct.startsWith('text/') || ct === 'application/javascript' || ct === 'application/json' || ct === 'image/svg+xml';
     const headers = {
       'Content-Type': ct + (needsCharset ? '; charset=utf-8' : ''),
-      'X-Content-Type-Options': 'nosniff',
+      ...securityHeaders,
     };
     if (staticExts.has(ext)) {
       headers['Cache-Control'] = 'public, max-age=31536000, immutable';
