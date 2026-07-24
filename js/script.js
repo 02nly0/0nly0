@@ -637,6 +637,28 @@
   /* ============================================================
      EXPOSE FOR ADMIN.JS
      ============================================================ */
+  /* ============================================================
+     AUTO-SYNC — poll server for changes from other devices
+     ============================================================ */
+  setInterval(async function () {
+    try {
+      const r = await fetch("/api/data");
+      const serverData = await r.json();
+      if (serverData && typeof serverData === "object") {
+        const snapshot = JSON.stringify(serverData);
+        let changed = false;
+        Object.keys(serverData).forEach(function (key) {
+          const prev = localStorage.getItem(key);
+          if (prev !== JSON.stringify(serverData[key])) {
+            localStorage.setItem(key, JSON.stringify(serverData[key]));
+            changed = true;
+          }
+        });
+        if (changed) renderProjects();
+      }
+    } catch (e) {}
+  }, 8000);
+
   window.__onlySite = { setLang, renderProjects, getHash, translations, applyBgImage, applyAnimations, renderCustomContactMethods };
 
 })();

@@ -75,14 +75,25 @@
     const s = localStorage.getItem(key);
     return s ? JSON.parse(s) : JSON.parse(JSON.stringify(fallback));
   }
-  function save(key, data) { localStorage.setItem(key, JSON.stringify(data)); syncToServer(key, data); }
+  function save(key, data) {
+    localStorage.setItem(key, JSON.stringify(data));
+    syncToServer(key, data);
+  }
 
   function syncToServer(key, data) {
-    fetch("/api/data", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ pin: PIN, data: { [key]: data } })
-    }).catch(function() {});
+    fetch("/api/data")
+      .then(function(r) { return r.json(); })
+      .then(function(serverData) {
+        if (serverData && typeof serverData === "object") {
+          serverData[key] = data;
+          return fetch("/api/data", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ pin: PIN, data: serverData })
+          });
+        }
+      })
+      .catch(function() {});
   }
 
   function syncFromServer() {
@@ -349,7 +360,7 @@
       input.addEventListener("change", (e) => {
         const file = e.target.files[0];
         if (!file) return;
-        if (file.size > 500 * 1024) { showToast("الصورة كبيرة جدًا (الحد الأقصى 500KB)"); return; }
+        if (file.size > 5 * 1024 * 1024) { showToast("الصورة كبيرة جدًا (الحد الأقصى 5MB)"); return; }
         const reader = new FileReader();
         reader.onload = (ev) => {
           const projects = getProjects();

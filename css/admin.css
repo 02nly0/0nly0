@@ -491,8 +491,19 @@
   transition: opacity .2s var(--ease);
 }
 .admin-project-card__preview:hover .admin-project-card__img-btn{ opacity: 1; }
+@media (hover: none){
+  .admin-project-card__img-btn{ opacity: 1 !important; }
+}
 .admin-project-card__img-btn svg{ width: 18px; height: 18px; color: #fff; }
-.admin-project-card__file{ display: none; }
+.admin-project-card__file{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+  z-index: 2;
+}
 
 .admin-project-card__body{
   flex: 1;

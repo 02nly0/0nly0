@@ -20,7 +20,7 @@ function parseBody(req) {
   return new Promise(function (resolve, reject) {
     var body = '';
     var len = 0;
-    var maxSize = 1048576;
+      var maxSize = 52428800;
     req.on('data', function (chunk) {
       len += chunk.length;
       if (len > maxSize) {
