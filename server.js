@@ -19,7 +19,17 @@ function writeData(data) {
 function parseBody(req) {
   return new Promise(function (resolve, reject) {
     var body = '';
-    req.on('data', function (chunk) { body += chunk; });
+    var len = 0;
+    var maxSize = 1048576;
+    req.on('data', function (chunk) {
+      len += chunk.length;
+      if (len > maxSize) {
+        req.destroy();
+        reject(new Error('Payload too large'));
+        return;
+      }
+      body += chunk;
+    });
     req.on('end', function () {
       try { resolve(JSON.parse(body)); }
       catch (e) { reject(e); }

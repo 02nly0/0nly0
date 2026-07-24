@@ -287,7 +287,7 @@
       ).join("");
       return `
       <div class="admin-project-card glass" data-id="${p.id}">
-        <div class="admin-project-card__preview" style="background: linear-gradient(135deg, ${escHtml(p.gradient.split(",")[0])}, ${escHtml(p.gradient.split(",")[1])})">
+        <div class="admin-project-card__preview" style="background: linear-gradient(135deg, ${escHtml((p.gradient || '#6d4fe0,#2c2350').split(",")[0])}, ${escHtml((p.gradient || '#6d4fe0,#2c2350').split(",")[1] || (p.gradient || '#6d4fe0,#2c2350').split(",")[0])})">
           ${p.image ? `<img src="${escHtml(p.image)}" alt="" loading="lazy">` : `<span class="project-card__glyph">${escHtml((p.titleEn || "?")[0])}</span>`}
           <button class="admin-project-card__img-btn" type="button" title="إضافة صورة">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>

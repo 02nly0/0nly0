@@ -213,6 +213,8 @@
       if (t[key]) {
         if (el.tagName === "TITLE" || key === "about_text") {
           el.innerHTML = t[key];
+        } else if (el.tagName === "META") {
+          el.setAttribute("content", t[key]);
         } else {
           el.textContent = t[key];
         }
@@ -436,7 +438,8 @@
     if (!methods || !methods.length) return;
     methods.forEach(function(m) {
       const isEmail = m.icon === "email" || (m.url && /^mailto:/i.test(m.url));
-      const href = isEmail && m.url && !/^mailto:/i.test(m.url) ? "mailto:" + m.url : (m.url || "#");
+      const rawHref = isEmail && m.url && !/^mailto:/i.test(m.url) ? "mailto:" + m.url : (m.url || "#");
+      const href = escUrl(rawHref);
       const icon = contactIcons[m.icon] || contactIcons.link;
       const label = escHtml(m.label || "Link");
       const display = escHtml(m.display || m.url || "");
@@ -479,12 +482,13 @@
     if (!projects) projects = defaultProjects;
     const lang = root.dataset.lang || "ar";
     grid.innerHTML = projects.map(function(p, i) {
-      const colors = p.gradient.split(",");
+      const grad = p.gradient || "#6d4fe0,#2c2350";
+      const colors = grad.split(",");
       const title = lang === "ar" ? escHtml(p.titleAr) : escHtml(p.titleEn);
       const glyph = escHtml((p.titleEn || "?")[0]);
       const artStyle = p.image
         ? "background-image:url(" + escUrl(p.image) + ");background-size:cover;background-position:center;"
-        : "background:linear-gradient(135deg," + escHtml(colors[0]) + "," + escHtml(colors[1]) + ");";
+        : "background:linear-gradient(135deg," + escHtml(colors[0]) + "," + escHtml(colors[1] || colors[0]) + ");";
       const tags = p.tags || (p.tag ? p.tag.split(/[·,]\s*/) : []);
       const tagsHtml = tags.map(function(t){ return '<span class="project-card__tag">' + escHtml(t.trim()) + '</span>'; }).join("");
       return '<article class="project-card glass" data-project-idx="' + i + '">' +
@@ -515,15 +519,16 @@
     const p = currentProjects[idx];
     if (!p) return;
     const lang = root.dataset.lang || "ar";
-    const colors = p.gradient.split(",");
+    const grad = p.gradient || "#6d4fe0,#2c2350";
+    const colors = grad.split(",");
     const title = lang === "ar" ? escHtml(p.titleAr) : escHtml(p.titleEn);
     const desc = lang === "ar" ? escHtml(p.descAr || "") : escHtml(p.descEn || "");
-    const link = p.link || "";
+    const link = escUrl(p.link || "");
     const tags = p.tags || [];
     const tagsHtml = tags.map(function(t){ return '<span class="project-modal__tag">' + escHtml(t.trim()) + '</span>'; }).join("");
     const artStyle = p.image
       ? "background-image:url(" + escUrl(p.image) + ");background-size:cover;background-position:center;"
-      : "background:linear-gradient(135deg," + escHtml(colors[0]) + "," + escHtml(colors[1]) + ");";
+      : "background:linear-gradient(135deg," + escHtml(colors[0]) + "," + escHtml(colors[1] || colors[0]) + ");";
 
     const modal = document.getElementById("projectModal");
     modal.querySelector(".project-modal__art").style.cssText = artStyle;
