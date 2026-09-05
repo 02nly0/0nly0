@@ -428,17 +428,17 @@ button{ font: inherit; color: inherit; background: none; border: none; cursor: p
 .page--active .project-card:nth-child(4){ transition-delay: .26s; }
 .project-card.visible:hover{ box-shadow: 0 24px 50px -18px var(--glass-shadow); }
 
+/* Project Card Top Section - Banner + User Avatar */
 .project-card__top{
   position: relative;
-  display: flex;
-  gap: 12px;
-  align-items: flex-start;
+  width: 100%;
+  margin: -14px -14px 0 -14px;
 }
 
 .project-card__art{
-  flex: 1;
-  aspect-ratio: 2 / 1.5;
-  border-radius: calc(var(--radius-md) - 8px);
+  position: relative;
+  aspect-ratio: 4 / 3;
+  border-radius: calc(var(--radius-md) - 8px) calc(var(--radius-md) - 8px) 0 0;
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -462,35 +462,42 @@ button{ font: inherit; color: inherit; background: none; border: none; cursor: p
   user-select: none;
 }
 
-/* User Image Section */
+/* User Avatar Section - Positioned over bottom of banner */
 .project-card__user{
-  width: 90px;
-  height: 90px;
-  flex-shrink: 0;
-  border-radius: calc(var(--radius-md) - 8px);
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--glass-bg-strong);
-  border: 1px solid var(--glass-border);
+  position: absolute;
+  bottom: -20px;
+  inset-inline-start: 14px;
+  z-index: 10;
 }
 
 .project-card__user-img{
-  width: 100%;
-  height: 100%;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: 3px solid var(--glass-bg);
   object-fit: cover;
+  display: block;
 }
 
 .project-card__user-placeholder{
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: 3px solid var(--glass-bg);
+  background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: 1.8rem;
-  color: rgba(255,255,255,.6);
-  user-select: none;
+  font-size: 1.4rem;
+  color: #fff;
+  mix-blend-mode: overlay;
 }
 
-.project-card__info{ padding: 0 4px 4px; }
+.project-card__info{ 
+  padding: 22px 4px 4px; 
+}
 .project-card__tags{ display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 6px; }
 .project-card__tag{
   font-size: .68rem;
@@ -828,14 +835,6 @@ img, video, svg{
   .page{ padding: 120px 6vw 80px; }
 
   .projects-grid{ grid-template-columns: 1fr; }
-  .project-card__top{
-    flex-direction: column;
-    align-items: stretch;
-  }
-  .project-card__user{
-    width: 100%;
-    height: 100px;
-  }
   .about-stats{ gap: 28px; }
   .contact-links{ grid-template-columns: 1fr; }
 }
