@@ -239,15 +239,15 @@
   const projects = [
     { 
       id: "p1", 
-      titleAr: "لوحة تحكم Nova", 
-      titleEn: "Nova Dashboard", 
-      descAr: "لوحة تحكم متكاملة لإدارة البيانات والمستخدمين بتصميم عصري.",
-      descEn: "Integrated dashboard for data and user management with modern design.",
-      tags: ["UI/UX", "Dashboard", "React"],
+      titleAr: "OnlyTiers bot", 
+      titleEn: "OnlyTiers Bot", 
+      descAr: "OnlyTiers - Using the **Tiers APIs** to let you check a player's tiers in Discord :)",
+      descEn: "OnlyTiers - Using the Tiers APIs to let you check a player's tiers in Discord :)",
+      tags: ["MCTIERS", "PVPTIERS", "&more"],
       gradient: "#6d4fe0,#2c2350",
-      image: null,
-      userImage: null,
-      link: "#"
+      image: https://i.postimg.cc/ZRmg1z20/file-00000000bf5081f4bae6255911bf86ad.png,
+      userImage: https://i.postimg.cc/3NJqxC3g/Picsart-26-07-30-14-04-43-572.jpg,
+      link: "https://discord.com/oauth2/authorize?client_id=1529714167546646682"
     }
   ];
 
