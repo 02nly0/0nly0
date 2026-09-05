@@ -246,6 +246,7 @@
       tags: ["UI/UX", "Dashboard", "React"],
       gradient: "#6d4fe0,#2c2350",
       image: null,
+      userImage: null,
       link: "#"
     }
   ];
@@ -273,9 +274,19 @@
         : "background:linear-gradient(135deg," + escHtml(colors[0]) + "," + escHtml(colors[1] || colors[0]) + ");";
       const tags = p.tags || [];
       const tagsHtml = tags.map(function(t){ return '<span class="project-card__tag">' + escHtml(t.trim()) + '</span>'; }).join("");
+      
+      const userImageHtml = p.userImage 
+        ? '<img src="' + escUrl(p.userImage) + '" alt="' + title + ' user" class="project-card__user-img">'
+        : '<div class="project-card__user-placeholder">' + glyph + '</div>';
+
       return '<article class="project-card glass" data-project-idx="' + i + '">' +
-        '<div class="project-card__art" style="' + artStyle + '">' +
-          (p.image ? '<img src="' + escUrl(p.image) + '" alt="' + title + '" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;">' : '<span class="project-card__glyph">' + glyph + '</span>') +
+        '<div class="project-card__top">' +
+          '<div class="project-card__art" style="' + artStyle + '">' +
+            (p.image ? '<img src="' + escUrl(p.image) + '" alt="' + title + '" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;">' : '<span class="project-card__glyph">' + glyph + '</span>') +
+          '</div>' +
+          '<div class="project-card__user">' +
+            userImageHtml +
+          '</div>' +
         '</div>' +
         '<div class="project-card__info">' +
           '<div class="project-card__tags">' + tagsHtml + '</div>' +
