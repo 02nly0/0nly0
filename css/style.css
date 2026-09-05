@@ -428,9 +428,16 @@ button{ font: inherit; color: inherit; background: none; border: none; cursor: p
 .page--active .project-card:nth-child(4){ transition-delay: .26s; }
 .project-card.visible:hover{ box-shadow: 0 24px 50px -18px var(--glass-shadow); }
 
-.project-card__art{
+.project-card__top{
   position: relative;
-  aspect-ratio: 4 / 3;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.project-card__art{
+  flex: 1;
+  aspect-ratio: 2 / 1.5;
   border-radius: calc(var(--radius-md) - 8px);
   overflow: hidden;
   display: flex;
@@ -454,6 +461,35 @@ button{ font: inherit; color: inherit; background: none; border: none; cursor: p
   mix-blend-mode: overlay;
   user-select: none;
 }
+
+/* User Image Section */
+.project-card__user{
+  width: 90px;
+  height: 90px;
+  flex-shrink: 0;
+  border-radius: calc(var(--radius-md) - 8px);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--glass-bg-strong);
+  border: 1px solid var(--glass-border);
+}
+
+.project-card__user-img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.project-card__user-placeholder{
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.8rem;
+  color: rgba(255,255,255,.6);
+  user-select: none;
+}
+
 .project-card__info{ padding: 0 4px 4px; }
 .project-card__tags{ display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 6px; }
 .project-card__tag{
@@ -721,19 +757,6 @@ body.theme-switching{
 .page--active .contact-link:nth-child(3){ transition-delay: .24s; }
 .page--active .contact-link:nth-child(4){ transition-delay: .32s; }
 
-/* ================= ADMIN PAGE MODE ================= */
-body.body-admin .nav,
-body.body-admin .footer,
-body.body-admin .page-overlay,
-body.body-admin #toast,
-body.body-admin .hero-bg-orb,
-body.body-admin .project-modal{ display: none !important; }
-
-.page--active.page--admin{
-  padding: 0;
-  min-height: 100vh;
-}
-
 /* ================= SITE BACKGROUND IMAGE ================= */
 .site-bg{
   position: fixed;
@@ -805,6 +828,14 @@ img, video, svg{
   .page{ padding: 120px 6vw 80px; }
 
   .projects-grid{ grid-template-columns: 1fr; }
+  .project-card__top{
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .project-card__user{
+    width: 100%;
+    height: 100px;
+  }
   .about-stats{ gap: 28px; }
   .contact-links{ grid-template-columns: 1fr; }
 }
