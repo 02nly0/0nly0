@@ -10,8 +10,8 @@
      ============================================================ */
   const defaultTranslations = {
     ar: {
-      title: "Only — مطوّر واجهات أمامية",
-      meta_desc: "الموقع الشخصي لـ Only، مطوّر واجهات أمامية أُحوّل الأفكار إلى تجارب رقمية هادئة ودقيقة.",
+      title: "Only — موقع",
+      meta_desc: "الموقع الشخصي لــ Only.",
       home_page_title: "الرئيسية — Only",
       about_page_title: "نبذة عني — Only",
       projects_page_title: "المشاريع — Only",
@@ -32,8 +32,8 @@
       copy_ok: "تم نسخ {label} ✓", copy_fail: "تعذّر النسخ، حاول يدويًا",
     },
     en: {
-      title: "Only — Front-end Developer",
-      meta_desc: "Only's personal website, a front-end developer.",
+      title: "Only — Website",
+      meta_desc: "Only Personal Website",
       home_page_title: "Home — Only",
       about_page_title: "About — Only",
       projects_page_title: "Projects — Only",
